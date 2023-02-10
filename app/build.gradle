@@ -46,7 +46,7 @@ dependencies {
     compile project(':vecmath')
     implementation fileTree(dir: '../libs', include: ['*.aar'])
 
-    implementation 'com.google.ar:core:1.2.0'
+    implementation 'com.google.ar:core:1.12.0'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
