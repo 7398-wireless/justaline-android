@@ -3,12 +3,12 @@ apply plugin: 'com.android.application'
 def API_KEY = '"' + ApiKey + '"' ?: '"Define your ApiKey in gradle.properties"'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId "com.arexperiments.justaline"
         minSdkVersion 24
-        targetSdkVersion 33
+        targetSdkVersion 27
         versionCode 40
         versionName "2.0.0"
         manifestPlaceholders = [screenOrientation: "portrait"]
