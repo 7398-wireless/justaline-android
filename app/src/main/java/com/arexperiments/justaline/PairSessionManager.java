@@ -404,6 +404,7 @@ public class PairSessionManager
      */
     @Override
     public void onPartnerJoined(boolean partnerIsPairing, boolean isHosting, int numPartners) {
+        Log.d("ar_activity", String.format("--- pair finished: %s ---", SessionHelper.timestamp()));
         if (mPairedOrPairing == PairedState.PAIRING && partnerIsPairing) {
             mPartnerInFlow = true;
             if (isHosting) {
@@ -431,6 +432,7 @@ public class PairSessionManager
     @Override
     public void onPartnerReadyToSetAnchor(boolean isHost) {
         partnerReadyToSetAnchor = true;
+        Log.d("ar_activity", String.format("--- start to sync anchor: %s ---", SessionHelper.timestamp()));
         if (isHost) {
             if (readyToSetAnchor) {
                 sendSetAnchorEvent();
@@ -446,6 +448,7 @@ public class PairSessionManager
     }
 
     public void readyToSetAnchor() {
+        // TODO: sync ended?
         readyToSetAnchor = true;
         mRoomDbManager.setReadyToSetAnchor(mUserUid, this, this);
 
@@ -494,6 +497,7 @@ public class PairSessionManager
                             if (isPairedOrPairing() && mPartnerInFlow) {
                                 if (Anchor.CloudAnchorState.SUCCESS != state) {
 //                                                showMessage("Anchor hosting failed: " + status);
+                                    Log.d("ar_activity", String.format("--- onAnchorHosted [NOT HOSTED]: %s ---", SessionHelper.timestamp()));
                                     Log.d(TAG, "onAnchorHosted: NOT hosted " + anchorId
                                             + " " + state.toString());
                                     if (mAnchorStateListener != null) {
@@ -512,6 +516,7 @@ public class PairSessionManager
                                             AnalyticsEvents.PARAM_PAIR_ERROR_SYNC_REASON,
                                             state == null ? null : state.toString());
                                 } else {
+                                    Log.d("ar_activity", String.format("--- onAnchorHosted [HOSTED]: %s ---", SessionHelper.timestamp()));
                                     Log.d(TAG, "onAnchorHosted: HOSTED" + anchorId + " "
                                             + state.toString());
                                     mAnchorId = anchorId;
@@ -652,6 +657,7 @@ public class PairSessionManager
         if (isHosting) {
             mPairedOrPairing = PairedState.PAIRED;
             if (mPairingStateChangeListener != null) {
+                Log.d("ar_activity", String.format("--- finish syncing anchor: %s ---", SessionHelper.timestamp()));
                 mPairingStateChangeListener.onStateChange(PairView.PairState.SYNCED);
             }
             for (PartnerUpdateListener listener : mPartnerUpdateListeners) {

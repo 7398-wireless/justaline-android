@@ -82,12 +82,13 @@
                 android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <meta-data android:name="com.google.ar.core" android:value="required"/>
+        <!-- @string/google_api_key is a generated value by google-services.json. -->
         <meta-data
                 android:name="com.google.android.ar.API_KEY"
-                android:value="@string/ApiKey"/>
+                android:value="@string/google_api_key"/>
         <meta-data
                 android:name="com.google.android.nearby.messages.API_KEY"
-                android:value="@string/ApiKey" />
+                android:value="@string/google_api_key" />
 
     </application>
 

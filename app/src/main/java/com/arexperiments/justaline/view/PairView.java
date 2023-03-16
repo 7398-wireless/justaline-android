@@ -22,6 +22,7 @@ import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.arexperiments.justaline.BuildConfig;
 import com.arexperiments.justaline.PairSessionManager;
 import com.arexperiments.justaline.R;
+import com.arexperiments.justaline.SessionHelper;
 import com.arexperiments.justaline.analytics.AnalyticsEvents;
 import com.arexperiments.justaline.analytics.Fa;
 import com.google.ar.core.Anchor;
@@ -316,6 +318,7 @@ public class PairView extends ConstraintLayout
         switch (state) {
             default:
             case LOOKING:
+                Log.d("ar_activity", String.format("LOOKING: %s", SessionHelper.timestamp()));
                 messageRes = R.string.pair_looking_for_partner;
                 imageRes = R.raw.looking_for_partner;
                 animation = new Animation(true, R.dimen.pair_animation_partner_discovery_width,
@@ -328,6 +331,7 @@ public class PairView extends ConstraintLayout
                 break;
             case HOST_CONNECTED:
             case PARTNER_CONNECTED:
+                Log.d("ar_activity", String.format("PARTNER FOUND: %s", SessionHelper.timestamp()));
                 messageRes = R.string.pair_connected;
                 imageRes = R.raw.partner_found;
                 animation = new Animation(false, R.dimen.pair_animation_partner_discovery_width,
@@ -336,6 +340,7 @@ public class PairView extends ConstraintLayout
                 break;
             case HOST_SET_ANCHOR:
             case PARTNER_SET_ANCHOR:
+                Log.d("ar_activity", String.format("SET ANCHOR: %s", SessionHelper.timestamp()));
                 if (listener != null) listener.setAnchorResolvingMode();
 
                 messageRes = R.string.pair_look_at_same_thing;
@@ -352,6 +357,7 @@ public class PairView extends ConstraintLayout
                 break;
             case HOST_CONNECTING:
             case PARTNER_CONNECTING:
+                Log.d("ar_activity", String.format("Start CONNECTING: %s", SessionHelper.timestamp()));
                 messageRes = R.string.pair_connect_phones;
                 imageRes = R.raw.stay_put;
                 animation = new Animation(true, R.dimen.pair_animation_stay_put_width,
@@ -405,6 +411,8 @@ public class PairView extends ConstraintLayout
                 showTryAgain = true;
                 break;
             case SYNCED:
+                Log.d("ar_activity", String.format("SYNCED: %s", SessionHelper.timestamp()));
+
                 if (listener != null) listener.setPairSuccessMode();
                 messageRes = R.string.pair_synced;
                 imageRes = R.drawable.jal_ui_check;
