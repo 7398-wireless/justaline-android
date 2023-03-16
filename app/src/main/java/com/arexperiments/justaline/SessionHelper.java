@@ -17,6 +17,10 @@ package com.arexperiments.justaline;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -59,5 +63,11 @@ public class SessionHelper {
         long prevTime = sharedPreferences.getLong(PREF_LAST_SESSION_END, 0);
         long currentTime = System.currentTimeMillis();
         return currentTime - prevTime;
+    }
+
+    public static String timestamp() {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+        DateTime dateTime = new DateTime();
+        return formatter.print(dateTime);
     }
 }

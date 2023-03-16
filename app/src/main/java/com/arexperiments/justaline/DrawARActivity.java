@@ -67,6 +67,9 @@ import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.NotTrackingException;
 import com.uncorkedstudios.android.view.recordablesurfaceview.RecordableSurfaceView;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -481,7 +484,8 @@ public class DrawARActivity extends BaseActivity
         stroke.localLine = true;
         stroke.setLineWidth(mLineWidthMax);
         mStrokes.add(stroke);
-
+        String currentTime = DateTime.now().withZone(DateTimeZone.UTC).toString("yyyyMMddHHmmss");
+        Log.d("ar_activity", "add stroke. ts: " + currentTime);
         // update firebase
         int index = mStrokes.size() - 1;
 //        mPairSessionManager.updateStroke(index, mStrokes.get(index));
@@ -1195,6 +1199,7 @@ public class DrawARActivity extends BaseActivity
 
     @Override
     public void onPairPressed() {
+        Log.d("ar_activity", String.format("--- pair start: %s---", SessionHelper.timestamp()));
         mPairSessionManager.startPairingSession(this);
 
         mPairButton.setContentDescription(getString(R.string.content_description_disconnect_from_friend));
@@ -1317,7 +1322,10 @@ public class DrawARActivity extends BaseActivity
                 Pose pose = mFrame.getCamera().getPose();
 
                 try {
+                    // ar core session creates anchor from the surrounding pose
+                    Log.d("ar_activity", String.format("--- start creating anchor: %s ---", SessionHelper.timestamp()));
                     mAnchor = mSession.createAnchor(pose);
+                    Log.d("ar_activity", String.format("--- anchor: %s ---", mAnchor));
                 } catch (NotTrackingException e) {
                     Log.e(TAG, "Cannot create anchor when not tracking", e);
                     mTrackingIndicator.addListener(new TrackingIndicator.DisplayListener() {
@@ -1336,6 +1344,9 @@ public class DrawARActivity extends BaseActivity
                 }
 
                 mPairSessionManager.onAnchorCreated();
+                Log.d("ar_activity", String.format("--- finish creating anchor: %s ---", SessionHelper.timestamp()));
+
+                // if there are strokes in the anchor, load them
                 if (mStrokes.size() > 0) {
                     for (int i = 0; i < mStrokes.size(); i++) {
                         mStrokes.get(i).offsetToPose(pose);
@@ -1368,7 +1379,7 @@ public class DrawARActivity extends BaseActivity
     @Override
     public void onConnectivityLostLeftRoom() {
         ErrorDialog.newInstance(R.string.pair_no_data_connection_title,
-                R.string.pair_no_data_connection_body, false)
+                        R.string.pair_no_data_connection_body, false)
                 .show(this);
     }
 
@@ -1462,6 +1473,9 @@ public class DrawARActivity extends BaseActivity
         value.calculateTotalLength();
         mSharedStrokes.put(uid, value);
         showStrokeDependentUI();
+
+        String currentTime = DateTime.now().withZone(DateTimeZone.UTC).toString("yyyyMMddHHmmss");
+        Log.d("ar_activity", "onLineAdded. id: " + uid + " ts: " + currentTime);
         mLineShaderRenderer.bNeedsUpdate.set(true);
     }
 
